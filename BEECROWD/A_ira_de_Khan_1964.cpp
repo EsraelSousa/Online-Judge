@@ -1,3 +1,4 @@
+// incompleto
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -11,8 +12,8 @@ int main(){
     C *= 100;
     I *= 100;
     T *= 60;
-    Ana = (T*Va)%C;
-    Bia = (T*Vb)%C;
+    Ana = (I+T*Va)%C;
+    Bia = (I+T*Vb)%C;
     cout << Ana << ' ' << Bia << '\n';
     return 0;
 }

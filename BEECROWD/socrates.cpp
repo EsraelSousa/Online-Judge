@@ -1,87 +1,99 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <math.h>
-#include <set>
-#include <map>
-#include <stdlib.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-typedef pair<int, int> pii;
-#define F first
-#define S second
+typedef long long ll;
+const int MAXN = 1e5+5;
+const int IFN = 1e5+2;
+int v[MAXN], answers[MAXN];
+int id[MAXN];
+int ans=0;
 
-map<int, int > di;
-int n;
-vector<pii> querys;
-int ans[100005];
-
-int coloca(int v, int p){
-	int res=0;
-	if(di[v] == v) res = -1;
-	if(di[v] == v-1) res = 1;
-	di[v]++;
-	return res;
+void remove(int x){  // TODO: remove value at idx from data structure
+	// tinha uma qtd x no intervalo
+	if(id[x] == x)
+		ans--;
+	id[x]--;
+	// apos remover uma ocorrencia agora uma uma qtd x no intervalo
+	if(id[x] == x){
+		ans++;
+	}
 }
 
-int retira(int v, int p){
-	int res=0;
-	if(di[v] == v) res = -1;
-	if(di[v] == v+1) res = 1;
-	di[v]--;
-	return res;
+void add(int x){    // TODO: add value at idx from data structure
+	// se tinha uma qtd x no intervalo
+	if(id[x] == x)
+		ans--;
+	id[x]++;
+	// agora tem uma qtd x no intervalo
+	if(id[x] == x)
+		ans++;
+}
+
+int get_answer(){ // TODO: extract the current answer of the data structure
+	return ans;
+}
+
+int block_size;
+
+struct Query {
+    int l, r, idx;
+    bool operator<(Query other) const
+    {
+        return make_pair(l / block_size, r) <
+               make_pair(other.l / block_size, other.r);
+    }
+};
+
+// adaptação do cp algorithm
+void mo_s_algorithm(vector<Query>& queries) {
+    sort(queries.begin(), queries.end());
+    // TODO: initialize data structure
+    int cur_l = queries[0].l;
+    int cur_r = queries[0].l-1;
+    // invariant: data structure will always reflect the range [cur_l, cur_r]
+    for (Query q : queries) {
+    	while (cur_r < q.r) {
+            cur_r++;
+            add(v[cur_r]);
+        }
+        while (cur_l > q.l) {
+        	cur_l--;
+            add(v[cur_l]);
+        }
+        while (cur_l < q.l) {
+            remove(v[cur_l]);
+            cur_l++;
+        }
+        while (cur_r > q.r) {
+            remove(v[cur_r]);
+            cur_r--;
+        }
+        answers[q.idx] = get_answer();
+    }
 }
 
 int main(){
-    ios_base::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-    int q, l, r, x;
-    cin >> n >> q;
-    vector<int> vals(n+5), id(q);
-    for(int i=1; i<=n; i++){
-    	cin >> vals[i];
-    	di[ vals[i] ]=0;
-    }
-    for(int i=0; i<q; i++){
-    	id[i] = i;
-    	cin >> l >> r;
-    	querys.push_back({min(l,r), max(l, r)});
-    }
-    sort(id.begin(), id.end());
-    //for(int i: id) cout << i << '\n';
-    int res=0;
-    l = querys[ id[0] ].F, r = querys[ id[0] ].S;
-    for(int p=l; p<=r; p++){
-    	res += coloca(vals[p], p);
-    }
-    ans[ id[0] ] = res;
-    for(int i=1; i<q; i++){
-    	// retira os eleme
-    	while(l < querys[ id[i] ].F && l <= r){
-    		res += retira(vals[l], l);
-    		l++;
-    	}
-    	
-    	if(r < querys[ id[i] ].F){
-    		l = querys[ id[i] ].F, r = querys[ id[i] ].S;
-    		for(int p=l; p<=r; p++){
-    			res += coloca(vals[p], p);
-    		}
-    	}
-    	else if(r > querys[ id[i] ].S){
-    		while(r > querys[ id[i] ].S){
-    			res += retira(vals[r], r);
-    			r--;
-    		}
-    	}
-    	else{
-    		for(int p=r+1; p<=querys[ id[i] ].S; p++)
-    			res += coloca(vals[p], p);
-    		r = querys[ id[i] ].S;
-    	}
-    	ans[ id[i] ] = res;
-    }
-    // respostas das querys
-    for(int i=0; i<q; i++) cout << ans[i] << '\n';
-    return 0;
-}
+ 	ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
+ 	int n, q, l, r;
+ 	cin >> n >> q;
+ 	block_size = sqrt(n);
+ 	for(int i=1; i<=n; i++){
+ 		cin >> v[i];
+ 		if(v[i] > n) v[i] = IFN;
+ 	}
+ 	vector<Query> qry;
+ 	Query x;
+ 	for(int i=0; i<q; i++){
+ 		cin >> l >> r;
+ 		if(l == 0 && r == 0) continue;
+ 		x.l = min(l, r), x.r = max(l, r);
+ 		x.idx = i;
+ 		qry.push_back(x);
+ 	}
+ 	mo_s_algorithm(qry);
+ 	for(int i=0; i<q; i++)
+		cout << answers[i] << '\n';
+ 	return 0;
+ }
+ 
