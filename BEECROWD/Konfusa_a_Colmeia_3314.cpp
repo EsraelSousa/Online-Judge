@@ -27,6 +27,7 @@ void bfs(int v){
         atual = fila.top().first;
         u = fila.top().second;
         fila.pop();
+        cout << atual << " string\n";
         ordemVisitado[qtd++] = u;
         for(int k=1; k<LOG; k++)
             lca[u][k] = lca[ lca[u][k-1] ][ k-1 ];
