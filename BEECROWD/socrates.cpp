@@ -51,6 +51,7 @@ void mo_s_algorithm(vector<Query>& queries) {
     // TODO: initialize data structure
     int cur_l = queries[0].l;
     int cur_r = queries[0].l-1;
+
     // invariant: data structure will always reflect the range [cur_l, cur_r]
     for (Query q : queries) {
     	while (cur_r < q.r) {
@@ -60,6 +61,7 @@ void mo_s_algorithm(vector<Query>& queries) {
         while (cur_l > q.l) {
         	cur_l--;
             add(v[cur_l]);
+           // cur_l--;
         }
         while (cur_l < q.l) {
             remove(v[cur_l]);
@@ -96,4 +98,3 @@ int main(){
 		cout << answers[i] << '\n';
  	return 0;
  }
- 
