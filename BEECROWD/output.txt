@@ -1,22 +1,2 @@
- dfs
-a dfs
-c dfs
-cq dfs
-cqt dfs
-cs dfs
-csn dfs
-csv dfs
-csvd dfs
-d dfs
-n dfs
-nl dfs
-np dfs
-npg dfs
-w dfs
-4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-5 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-6 5 segunda parte
-0
-2
-3
-3
+4
+10
