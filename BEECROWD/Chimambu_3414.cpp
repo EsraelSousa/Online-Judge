@@ -2,9 +2,9 @@
 
 using namespace std;
 
-typedef long long ll;
+typedef unsigned long long ll;
 
-const ll MOD = 1e9+7;
+const ll MOD = 1e9+9;
 
 ll read_int() {
     bool minus = false;
@@ -28,10 +28,12 @@ ll read_int() {
 }
 
 ll fastPow(ll b, ll e){
-	ll ans = 1LL;
+	ll ans = 1LL, x;
 	while(e){
-		if(e & 1) ans = (ans*b)%MOD;
-		b = (b*b)%MOD;
+		if(e & 1) ans = (ans*b) % MOD;
+		b = (b*b) % MOD;
+		//if(b >= MOD) b -= MOD;
+		//if(ans >= MOD) ans -= MOD;
 		e >>=1;		
 	}
 	return ans;
@@ -39,10 +41,8 @@ ll fastPow(ll b, ll e){
 
 ll contZeroDireita(ll x){
 	ll ans = 0;
-	int j=1;
 	if(x == 0) return 60;
-	while(!(x & 1) && j <= 60){
-		j++;
+	while(!(x & 1)){
 		ans++;
 		x >>=1;
 	}
@@ -64,15 +64,20 @@ int main() {
 		c = contZeroDireita(a);
 		while(c > contZeroDireita(b)){
 			val++;
-			b = (b << 1) % mod;
+			b <<= 1;
+			if(b >= mod) b %= mod;
 		}
 		while(a != b){
-			a = (a << 1) % mod;
-			b = (b << 1) % mod;
+			a <<= 1;
+			b <<= 1;
+			if(a >= mod) a%= mod;
+			if(b >= mod) b%= mod;
 			val+=2;
 		}
-		ans = (ans + fastPow(n, i) * val) % MOD;
 		
+		ans += fastPow(n, i) * val;
+		c = ans / MOD;
+		ans -= MOD * c;
 	}
 	printf("%lld\n", ans);
 	return 0;
