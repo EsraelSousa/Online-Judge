@@ -8,12 +8,10 @@ int main(){
     cin >> testes;
     while(testes--){
         cin >> stack1 >> stack2;
-        if(stack2 < stack1) swap(stack1, stack2);
-        if(!stack1 && !stack2) cout << "YES\n";
-        else{
-            cout << (((stack1 & 1 && stack2 & 1 && min(stack1, stack2) != 1) || (
-            2*stack1 == stack2))? "YES\n" : "NO\n");
-        }
+        if((2*stack1 - stack2) >= 0 && (2*stack1 - stack2) % 3 == 0 &&
+           (2*stack2 - stack1) >= 0 && (2*stack2 - stack1) % 3 == 0) 
+           cout << "YES\n";
+        else cout << "NO\n";
     }
     return 0;
 }

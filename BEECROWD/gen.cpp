@@ -7,6 +7,7 @@ ll gen(ll a, ll b) {
     uniform_int_distribution<ll> dist (a, b);
     return dist(rnd);
 }
+
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         cerr << "usage: " << argv[0] << " <seed> <n> <q> <m>\n"; return 1;
