@@ -1,48 +1,46 @@
 #include <bits/stdc++.h>
-
 using namespace std;
+#define fst first
+#define snd second
+typedef pair<int, int> pii;
+typedef unsigned long long ull;
+typedef long long ll;
+typedef long double ld;
+#define pb push_back
+#define for_tests(t, tt) int t; scanf("%d", &t); for(int tt = 1; tt <= t; tt++)
+template<typename T> inline T abs(T t) { return t < 0? -t : t; }
+const ull modn = 1000000007;
+inline ull mod(ull x) { return x % modn; }
 
-const int MAXN = 1e5+5;
-int ar[MAXN];
-vector<int> tree[4*MAXN];
-
-void build(int no, int l, int r){
-    if(l == r){
-        tree[no].push_back(ar[l]);
-        return;
+ll memo[25][2][2];
+char str[25];
+ll solve(int d, bool pre, bool one) {
+    if(!str[d]) return 1;
+    ll &r = memo[d][pre][one];
+    if(r != -1) return r;
+    r = 0;
+    for(int i = 0; i <= 9; i++) {
+        if(pre && (i + '0') > str[d]) break;
+        if(i == 4 || (one && i == 3)) continue;
+        r += solve(d + 1, pre && (i + '0') == str[d], i == 1);
     }
-    int m = l + (r-l)/2;
-    build(2*no, l, m);
-    build(2*no+1, m+1, r);
-    for(auto x: tree[2*no])
-        tree[no].push_back(x);
-    for(auto x: tree[2*no+1])
-        tree[no].push_back(x);
-    sort(tree[no].begin(), tree[no].end());
+    return r;
 }
 
-int query(int no, int l, int r, int a, int b, int val){
-    if(l > b or r < a) return 0;
-    if(a <= l && r <= b){
-        return (int)(lower_bound(tree[no].begin(), tree[no].end(), val) - tree[no].begin());
+int main() {
+    ull n;
+    while(scanf("%llu", &n) != EOF) {
+        ull l = 0, r = 10000000000000000000ull;
+        //sprintf(str, "%llu", n);
+        //memset(memo, -1, sizeof memo);
+        //printf("%lldn", solve(0, true, false) - 1);
+        while(l < r) {
+            ull m = ((r - l) / 2ull) + l;
+            sprintf(str, "%llu", m);
+            memset(memo, -1, sizeof memo);
+            if(solve(0, true, false) < n + 1) l = m + 1;
+            else r = m;
+        }
+        printf("%llu\n", l);
     }
-    int m = l + (r-l)/2;
-    return query(2*no, l, m, a, b, val) + 
-           query(2*no+1, m+1, r, a, b, val);
-}
-
-int main(){
-    ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-    int n, ans = 0;
-    cin >> n;
-    for(int i=1; i<=n; i++)
-        cin >> ar[i];
-    build(1, 1, n);
-    for(int i=1; i<=n; i++){
-        int qtd = 0;
-        qtd += query(1, 1, n, i+1, n, ar[i]);
-        ans += qtd;
-    }
-    cout << ans << '\n';
-    return 0;
 }
