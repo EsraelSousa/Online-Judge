@@ -1,8 +1,8 @@
-for (( I=0; ; I++ )); do
-  ./gen $I 4 2 2 >m.in
+for (( I=0; I <= 100 ; I++ )); do
+  ./gen $I 200000 100000 1000 >m.in
   ./brute <m.in >m.exp
   ./a.out <m.in >m.out
-  if diff -u m.exp m.out; then : ; else
+  if diff -u --suppress-common-lines m.out m.exp; then : ; else
     echo "--> entrada:"; cat m.in
     echo "--> saída esperada"; cat m.exp
     echo "--> saída obtida"; cat m.out
