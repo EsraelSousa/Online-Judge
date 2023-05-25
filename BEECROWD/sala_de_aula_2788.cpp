@@ -18,8 +18,8 @@ int contDigits(ll n){
 
 ll bfs(ll n, ll m){
 	ll atu, aux;
-    int casas = contDigits(n), x, y;
-    atu = pow(casas);
+    int x, y;
+    atu = pow(contDigits(n));
     ll ans = 1e19;
     ll rest;
     for(int i=0; i<=100000; i++){
@@ -38,7 +38,6 @@ ll bfs(ll n, ll m){
             y++;
             aux *= 10;
         }
-
     }
 	return ans;
 }

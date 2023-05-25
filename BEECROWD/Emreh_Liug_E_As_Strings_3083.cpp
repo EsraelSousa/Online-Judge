@@ -5,6 +5,7 @@ typedef long long ll;
 typedef vector<ll> vi;
 const ll p = 131; // p and M are
 const ll M = 1e9+7; // relatively prime
+const int MAXN = 1e5+5;
 
 ll mod(ll a, ll m) { // returns a (mod m)
     return ((a%m) + m) % m; // ensure positive answer
@@ -40,6 +41,7 @@ ll modInverse(ll b, ll m) { // returns b^(-1) (mod m)
     return mod(x, m);
 }
 
+vi prefixSum;
 vi P; // to store p^i % M
 vi h;
 
@@ -51,7 +53,7 @@ vi prepareP(int n) { // compute p^i % M
     return P;
 }
 
-void computeRollingHash(string T) { // Overall: O(n)
+void computeRollingHash(string& T) { // Overall: O(n)
     vi P = prepareP((int)T.length()); // O(n)
     h.assign(T.size(), 0);
     for (int i = 0; i < (int)T.length(); ++i) { // O(n)
@@ -68,10 +70,27 @@ ll hash_fast(int L, int R) { // O(1) hash of any substr
     return ans;
 }
 
-ll computeRash(string& T){
+ll solve(int idx, char c, int n, int T, ll hashComp, string& s){
     ll ans = 0;
-    for(int i=0; i<T.size(); i++)
-        ans = (ans + T[i]*powMod(p, i)) % M;
+    ll hashAtual;
+    int i, j, limit;
+    i = max(0, idx - n + 1);
+    limit = min(idx + n - 1, T);
+
+    if(i)
+        ans += prefixSum[i-1];
+    if(limit < T)
+        ans += prefixSum[T] - prefixSum[limit];
+    for(; i<=limit; i++){
+        hashAtual = 0;
+        for(j = 0; j<n; j++){
+            if(i + j == idx)
+                hashAtual = (hashAtual + ((ll)(c * P[j])) % M) % M;
+            else
+                hashAtual = (hashAtual + ((ll)(s[i+j] * P[j])) % M) % M;
+        }
+        ans += (hashAtual == hashComp);
+    }
     return ans;
 }
 
@@ -82,16 +101,24 @@ int main(){
     char letra;
     cin >> s1 >> s2;
     computeRollingHash(s2);
-    ll hashS2 = hash_fast(1, s2.size());
+    ll hashS2 = hash_fast(0, s2.size()-1);
     computeRollingHash(s1);
     ll ans = 0;
-    for(int i=1; i<=s1.size()-s2.size(); i++)
-        cout << i << ' ' << hash_fast(i, i+s2.size()) << '\n';
-    cout << ans << ' ' << hashS2 << " init\n";
+    for(int i=0; i<(int)(s1.size()); i++){
+        //cout << i << ' ' << hash_fast(i, i+s2.size()-1) << ' ' << i + s2.size() << '\n';
+        ans += (hashS2 == hash_fast(i, min(i+s2.size()-1, s1.size()-1)));
+        prefixSum.push_back(ans);
+    }
+    //cout << ans << ' ' << hashS2 << " init\n";
     cin >> query;
     while(query--){
         cin >> idx >> letra;
         idx--;
+        if(s1[idx] == letra){
+            cout << ans << '\n';
+            continue;
+        }
+        cout << solve(idx, letra, s2.size(), s1.size()-1, hashS2, s1) << '\n';
     }
     return 0;
 }
