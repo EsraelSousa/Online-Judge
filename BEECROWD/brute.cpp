@@ -13,6 +13,16 @@ typedef vector<vi> vvi;
 
 const int MAXN = 2*1e5+5;
 
+struct Tno{
+    ll sum = 0;
+    int qtd7 = 0, qtd13 = 0;
+};
+
+struct Tlazy{
+    int new7 = 7, new13 = 13;
+};
+
+
 int ar[MAXN];
 
 int main(){

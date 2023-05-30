@@ -15,25 +15,21 @@ int main(int argc, char* argv[]) {
     rnd = mt19937(atoi(argv[1]));
 
     int n = atoi(argv[2]); int q = atoi(argv[3]); int m = atoi(argv[4]);
-    cout << n << "\n";
+    cout << n << ' ' << q << "\n";
     for (int i = 0; i < n; i++) {
         cout << gen(1, m) << " ";
     }
-    cout << "\n" << q << "\n";
+    cout << '\n';
     while (q--) {
-         int op = gen(1, 3);
-         int l = gen(1, n);
+        int op = gen(1, 2);
+        int l = gen(1, n);
         int r = gen(1, n);
-        int cond = gen(0, 1);
-        int v = gen(0, 1000);
+        int v = gen(0, 10000);
         if(op == 1){
-            cout << op << ' ' << l << ' ' << v << '\n';
+            cout << op << ' ' << l << ' ' << r << ' ' << v << '\n';
         }
         else if(op == 2){
-            cout << op << ' ' << min(l, r) << ' ' << max(l, r) <<  ' ' << (cond? 13 : 7) << ' ' << v << '\n';
-        }
-        else{
-            cout << op << ' ' <<  min(l, r) << ' ' << max(l, r) << '\n';
+            cout << op << ' ' << min(l, r) << ' ' << max(l, r) << '\n';
         }
     }
 }

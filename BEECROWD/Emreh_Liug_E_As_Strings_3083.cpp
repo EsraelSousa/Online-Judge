@@ -72,25 +72,15 @@ ll hash_fast(int L, int R) { // O(1) hash of any substr
 
 ll solve(int idx, char c, int n, int T, ll hashComp, string& s){
     ll ans = 0;
-    ll hashAtual;
+    ll hashAtual = 0;
     int i, j, limit;
-    i = max(0, idx - n + 1);
-    limit = min(idx + n - 1, T);
-
-    if(i)
-        ans += prefixSum[i-1];
-    if(limit < T)
-        ans += prefixSum[T] - prefixSum[limit];
-    for(; i<=limit; i++){
-        hashAtual = 0;
-        for(j = 0; j<n; j++){
-            if(i + j == idx)
-                hashAtual = (hashAtual + ((ll)(c * P[j])) % M) % M;
-            else
-                hashAtual = (hashAtual + ((ll)(s[i+j] * P[j])) % M) % M;
-        }
-        ans += (hashAtual == hashComp);
-    }
+    char aux = s[idx];
+    vi hash;
+    s[idx] = c;
+    computeRollingHash(s);
+    for(int i=0; i <= T-n; i++)
+        ans += (hashComp == hash_fast(i, i+n-1));
+    s[idx] = aux;
     return ans;
 }
 
