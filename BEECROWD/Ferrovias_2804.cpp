@@ -14,11 +14,6 @@ bool visitado[MAX], nivel[MAX];
 ll distR[MAX];
 set<pair<int, int>> usada;
 
-int dx[] = {-1, 0, 1, 0}, dy[] = {0, 1, 0, -1};
-
-for(int i=0; i<4; i++)
-    x = x+dx[i], y = y+dy[i];
-
 struct edge{
 	int u, v;
 	int distancia;
@@ -112,6 +107,13 @@ int main(){
 			a.distancia = dist[i][j];
 			arestas.push_back(a);
 		}
+    for(int k=1; k<=n; k++)
+        for(int i=1; i<=n; i++)
+            for(int j=1; j<=n; j++)
+                distA[i][j] = min(distA[i][j], distA[i][k]+distA[k][j]);
+    for(int i=1; i<=n; i++)
+        for(int j=1; j<=n; j++)
+            flag &= (distA[i][j] == dist[i][j]);
 	if(!flag){
 		cout << "*\n";
 		return 0;
