@@ -41,7 +41,7 @@ int main(){
     
     sort(all(k_peia));
 
-    for(int i=1; i<=m; i++){
+    for(int i=1; i<=m; i++)
         for(int j=0; j<2; j++)
             cin >> qtdSapato[i][j];
             
@@ -58,3 +58,17 @@ int main(){
     cout << ans << '\n';
     return 0;
 }
+
+/*
+um caso que da errado para uma solução gulosa
+3 2
+10 2 6
+12 2 11
+2 2 6
+0 0
+6 6
+
+ans = 12
+
+não podemos simplismente pegar por uma ordem
+*/

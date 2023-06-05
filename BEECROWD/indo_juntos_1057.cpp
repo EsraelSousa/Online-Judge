@@ -42,7 +42,7 @@ bool isAlvo[MAXN][MAXN], vis[3][MAXN][MAXN];
 int n;
 int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
 set<string> visitado;
-int ordem[6][3] = {{0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}};
+int ordem[9][3] = {{0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}, {0, 0, 0}, {1, 1, 1}, {2, 2, 2}};
 
 void reset(){
 	memset(isAlvo, 0, sizeof(isAlvo));
@@ -96,12 +96,12 @@ int dijk(Data& estado){
 		addSet(estado);
 		//cout << fila.size() << " tamanho ao entrar\n";
 		for(int i=0; i<4; i++){
-			for(int k=0; k<6; k++){
+			for(int k=0; k<9; k++){
                 Data aux = estado;
                 for(int j=0; j<3; j++){
                     int x = aux.play[ ordem[k][j] ].fs;
                     int y = aux.play[ ordem[k][j] ].sd;
-                    if(isVisitado(aux) || isBorda(x+dx[i], y+dy[i]) || (aux.grid[ x + dx[i]][ y+dy[i] ] != '.')) continue; // nao anda o robo
+                    if(isBorda(x+dx[i], y+dy[i]) || (aux.grid[ x + dx[i]][ y+dy[i] ] != '.')) continue; // nao anda o robo
                     aux.play[ ordem[k][j] ].fs += dx[i];
                     aux.play[ ordem[k][j] ].sd += dy[i];
                     swap(aux.grid[x][y], aux.grid[ x + dx[i] ][ y + dy[i] ]);
