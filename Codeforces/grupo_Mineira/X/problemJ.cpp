@@ -17,42 +17,49 @@ struct Data{
     int tamanhoSapato;
     int qtdPes;
     int majestosidade;
-
-    bool operator<(const Data& other) const{
-        if(this->majestosidade == other.majestosidade)
-            return this->qtdPes < other.qtdPes;
-        else
-            return this->majestosidade > other.majestosidade;
-    }
 };
 
 const int MAXT = 505;
+const int MAXP = 25005;
 
-int qtdSapato[MAXT][2];
+vector<Data> lista[MAXT];
+int qtdSapato[MAXT];
+ll dp[MAXT][MAXP];
+
+ll solve(int i, int W, int idx){
+    if(i == (int)lista[idx].size()) return 0;
+    ll &ans = dp[i][W];
+    if(ans != -1) return ans;
+    ans = solve(i+1, W, idx);
+    if(W + lista[idx][i].qtdPes <= qtdSapato[idx])
+        ans = max(ans, lista[idx][i].majestosidade + solve(i+1, W + lista[idx][i].qtdPes, idx));
+    return ans;
+}
 
 int main(){
     fast
     int n, m;
     ll ans = 0;
     cin >> n >> m;
-    vector<Data> k_peia(n);
-    for(int i=0; i<n; i++)
-        cin >> k_peia[i].qtdPes >> k_peia[i].tamanhoSapato >> k_peia[i].majestosidade;
-    
-    sort(all(k_peia));
-
-    for(int i=1; i<=m; i++)
-        for(int j=0; j<2; j++)
-            cin >> qtdSapato[i][j];
-            
-
+    Data k_peia;
     for(int i=0; i<n; i++){
-        int qtdDisponivel = min(qtdSapato[ k_peia[i].tamanhoSapato ][0], qtdSapato[ k_peia[i].tamanhoSapato ][1]);
-        int qtdPes = k_peia[i].qtdPes / 2;
-        if(qtdPes <= qtdDisponivel){
-            ans += k_peia[i].majestosidade;
-            qtdSapato[ k_peia[i].tamanhoSapato ][0] -= qtdPes;
-            qtdSapato[ k_peia[i].tamanhoSapato ][1] -= qtdPes;
+        cin >> k_peia.qtdPes >> k_peia.tamanhoSapato >> k_peia.majestosidade;
+        k_peia.qtdPes /= 2;
+        lista[ k_peia.tamanhoSapato ].push_back(k_peia);
+    }
+    
+    for(int i=1; i<=m; i++){
+        int a, b;
+        cin >> a >> b;
+        qtdSapato[i] = min(a, b);
+        //cout << qtdSapato[i] << " peso\n";
+    }
+            
+    for(int i=1; i<=m; i++){
+        if(lista[i].size() && qtdSapato[i]){
+        	for(int j=0; j<lista[i].size(); j++)
+            	memset(dp[j], -1, sizeof(dp[j]));
+            ans += solve(0, 0, i);
         }
     }
     cout << ans << '\n';
