@@ -31,10 +31,6 @@ struct state{
     state(){
 
     }
-
-    bool operator>(const state& other) const{
-        return this->distancia < other.distancia;
-    }
 };
 
 char grid[MAXN][MAXN];
@@ -65,17 +61,17 @@ bool isVisitado(state& x){
 }
 
 int dijk(state& estado){
-	priority_queue<state, vector<state>, greater<state>> fila;
+	queue<state> fila;
 	ii newA, newB, newC;
     bool hasA, hasB, hasC;
     fila.push(estado);
     visitado[ estado.roboA.fs ][ estado.roboA.sd ][ estado.roboB.fs ][ estado.roboB.sd ][ estado.roboC.fs ][ estado.roboC.sd ] = true;
     state next;
 	while(fila.size()){
-		estado = fila.top();
+		estado = fila.front();
         fila.pop();
 
-        if(isAlvo(estado)) return estado.distancia;
+        if(isAlvo(estado)) ans = min(ans, estado.distancia);
 
         for(int i=0; i<4; i++){
             newA.fs = estado.roboA.fs + dx[i], newA.sd = estado.roboA.sd + dy[i];
