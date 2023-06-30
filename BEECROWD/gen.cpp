@@ -13,23 +13,16 @@ int main(int argc, char* argv[]) {
         cerr << "usage: " << argv[0] << " <seed> <n> <q> <m>\n"; return 1;
     }
     rnd = mt19937(atoi(argv[1]));
-
+    string gigante="PMG";
     int n = atoi(argv[2]); int q = atoi(argv[3]); int m = atoi(argv[4]);
     cout << n << ' ' << q << "\n";
     for (int i = 0; i < n; i++) {
-        cout << gen(1, m) << " ";
+        cout << gigante[gen(0, 2)];
     }
     cout << '\n';
-    while (q--) {
-        int op = gen(1, 2);
-        int l = gen(1, n);
-        int r = gen(1, n);
-        int v = gen(0, 10000);
-        if(op == 1){
-            cout << op << ' ' << l << ' ' << r << ' ' << v << '\n';
-        }
-        else if(op == 2){
-            cout << op << ' ' << min(l, r) << ' ' << max(l, r) << '\n';
-        }
-    }
+    vector<int> tam;
+    for(int i=0; i<3; i++) tam.push_back(gen(1, q));
+    sort(tam.begin(), tam.end());
+    for(auto x: tam) cout << x << ' ';
+    cout << '\n';
 }
