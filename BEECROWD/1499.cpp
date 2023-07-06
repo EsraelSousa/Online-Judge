@@ -71,6 +71,14 @@ vector<ull> multiply(vector<ull> const& a, vector<ull> const& b) {
     return result;
 }
 
+int dfs1(int v, int distR){
+    vis[v] = 1;
+    dist = max(dist, distR);
+    for(auto &x: adj[v])
+        if(!vis[x])
+            dfs1(x, distR+1);
+}
+
 void dfs(int tree, int v, int distRoot){
     vis[v] = 1;
     maxDist[tree][v] = max(maxDist[tree][v], (ull)distRoot);
@@ -137,6 +145,13 @@ int main(){
         vector<ull> ans = multiply(d1, d2);
         vector<ull> cont(ans.size(), 0);
         ull i=0;
+        for(int i=0; i<2; i++){
+            dist = 0;
+            memset(vis, 0, sizeof(vis));
+            dfs1(i, 0);
+            if()
+        }
+        exit(0);
         
         for(auto &x: ans){
             cout << x <<' ';
