@@ -21,6 +21,7 @@ ull maxDist[2][MAX];
 bool vis[MAX];
 ull dist, maxA, maxB;
 int no;
+int distancia[MAX];
 
 using cd = complex<long double>;
 const double PI = acos(-1);
@@ -71,28 +72,32 @@ vector<ull> multiply(vector<ull> const& a, vector<ull> const& b) {
     return result;
 }
 
-int dfs1(int v, int distR){
+void bfs(int tree, int v, int distRoot){
     vis[v] = 1;
-    dist = max(dist, distR);
-    for(auto &x: adj[v])
-        if(!vis[x])
-            dfs1(x, distR+1);
-}
-
-void dfs(int tree, int v, int distRoot){
-    vis[v] = 1;
-    maxDist[tree][v] = max(maxDist[tree][v], (ull)distRoot);
-    if(distRoot > dist){
-    	dist = distRoot;
-    	no = v;
-    }
-    for(auto &x: adj[v]){
-        if(!vis[x]){
-            dfs(tree, x, distRoot + 1);
+    queue<int> q;
+    q.push(v);
+    dist = distancia[v] = 0;
+    memset(vis, 0, sizeof(vis));
+    while(q.size()){
+        v = q.front();
+        q.pop();
+        
+        vis[v] = 1;
+        
+        for(auto &x: adj[v]){
+            if(vis[x] == 0){
+                distancia[x] = distancia[v] + 1;
+                if(distancia[x] > dist){
+                    dist = distancia[x];
+                    no = x;
+                }
+                maxDist[tree][x] = max(maxDist[tree][x], (ull)(distancia[x]));
+                if(!tree) maxA = max(maxA, maxDist[0][v]);
+                else maxB = max(maxB, maxDist[1][v]);
+                q.push(x);
+            }
         }
     }
-    if(!tree) maxA = max(maxA, maxDist[0][v]);
-    else maxB = max(maxB, maxDist[1][v]);
 }
 
 int main(){
@@ -112,12 +117,9 @@ int main(){
             adj[u].push_back(v);
             adj[v].push_back(u);
         }
-        dist = 0;
-        dfs(0, 1, 0);
-        memset(vis, 0, sizeof(vis));
-        dist = 0;
-        dfs(0, no, 0);
-        
+        bfs(0, 1, 0);
+        bfs(0, no, 0);
+        bfs(0, no, 0);
         for(int i=1; i<=m; i++){
         	adj[i].clear();
         	maxDist[1][i] = 0;
@@ -128,11 +130,9 @@ int main(){
             adj[u].push_back(v);
             adj[v].push_back(u);
         }
-        dist = 0;
-        dfs(1, 1, 0);
-        memset(vis, 0, sizeof(vis));
-        dist = 0;
-        dfs(1, no, 0);
+        bfs(1, 1, 0);
+        bfs(1, no, 0);
+        bfs(1, no, 0);
         ull sum = 0;
 		ull D = max(maxA, maxB);
         vector<ull> d1(D+2, 0), d2(D+2, 0);
@@ -143,18 +143,9 @@ int main(){
             d2[ maxDist[1][i] ]++;
 		
         vector<ull> ans = multiply(d1, d2);
-        vector<ull> cont(ans.size(), 0);
         ull i=0;
-        for(int i=0; i<2; i++){
-            dist = 0;
-            memset(vis, 0, sizeof(vis));
-            dfs1(i, 0);
-            if()
-        }
-        exit(0);
         
         for(auto &x: ans){
-            cout << x <<' ';
             if(i <= D){
                 sum += x * D;
                 
@@ -163,23 +154,6 @@ int main(){
                 sum += x * i;
             i++;
         }
-        cout << '\n';
-        sum = 0;
-        for(int i=1; i<=n; i++)
-            for(int j=1; j<=m; j++){
-                int r = (maxDist[0][i] + maxDist[1][j] + 1);
-                cont[r]++;
-                sum += r;
-                //cout << max(maxDist[0][i] + maxDist[1][j] + 1, max(maxA, maxB)) << '\n';
-            }
-        for(auto &x: cont) cout << x << ' ';
-        cout << '\n';
-        int qtd = 0;
-        for(int p = 0; p<ans.size(); p++){
-            qtd += (ans[p] != cont[p]);
-            if(ans[p] != cont[p]) cout << p << '\n';
-        }
-        cout << qtd << ' ' << max(maxA, maxB) << " quantidade diferente\n";
         cout << fixed << setprecision(3) << sum / (1.0*n*m) << '\n';
     }
     return 0;

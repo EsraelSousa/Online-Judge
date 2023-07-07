@@ -37,7 +37,9 @@ int main(int argc, char* argv[]) {
     }
     rnd = mt19937(atoi(argv[1]));
     int n = atoi(argv[2]); int q = atoi(argv[3]); int m = atoi(argv[4]);
-    cout << n << ' ' << q << "\n";
-    genTree(n);
-    genTree(q);
+    cout << n << '\n';
+    while(n--){
+        cout << gen(1, 16) << ' ';
+    }
+    cout << '\n';
 }
