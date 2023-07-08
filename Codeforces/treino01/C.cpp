@@ -15,21 +15,6 @@ typedef vector<vi> vvi;
 #define left(x) (2*x)
 #define right(x) (2*x + 1)
 
-int position(vector<pll> &v, int x){
-    int ans = v.size()-1;
-    int l = 0, r = ans, m;
-    while(l <= r){
-        m = l + (r-l)/2;
-        if(v[m].ff >= x){
-            ans = m;
-            r = m-1;
-        }
-        else
-            l = m+1;
-    }
-    return ans;
-}
-
 bool comp(ii &a, ii &b){
     if(a.ff == b.ff)
         return a.ss < b.ss;
