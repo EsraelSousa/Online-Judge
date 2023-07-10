@@ -67,12 +67,12 @@ int main(){
     fast
     int tes;
     int caso = 1;
-    vvi ans;
-    findPermutations(ans);
+    vvi permutations;
+    findPermutations(permutations);
     cin >> tes;
     while(tes--){
     	cout << "Caso " << caso++ << ":\n";
-        task(ans);
+        task(permutations);
     }
     return 0;
 }
