@@ -16,18 +16,17 @@ typedef vector<vi> vvi;
 
 int main(){
     fast
-    /*
-    temos que a velocidade media eh V = S/T
-    Vamos considerar que a distancia entre a casa e o escritorio eh 1 km
-    se a velocidade media eh V km/h
-    temos que ele demora T = 1/V
-    
-    */
-    long double velocidadeA, velocidadeB;
-    cin >> velocidadeA >> velocidadeB;
-	long double ta, tb;
-	ta = 1000 / velocidadeA;
-	tb = 1000 / velocidadeB;
-    cout << fixed << setprecision(2) << 2000 / (ta+tb) << '\n'; 
+    set<pair<string, string>> relacoes;
+    string a, b;
+    int n, q;
+    cin >> n >> q;
+    while(n--){
+    	cin >> a >> b;
+    	relacoes.insert({a, b});
+    }
+    while(q--){
+    	cin >> a >> b;
+    	cout << ((relacoes.find({a, b}) != relacoes.end())? "" : "nao e o ") << "Nao e a mamae\n";
+    }
     return 0;
 }
