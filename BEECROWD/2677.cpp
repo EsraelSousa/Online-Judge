@@ -1,57 +1,47 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
-#define fast ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-typedef long long ll;
-typedef unsigned long long ull;
-typedef vector<int> vi;
-typedef pair<int, int> ii;
-typedef vector<vi> vvi;
-#define ff first
-#define ss second
-#define all(x) x.begin(), x.end()
-#define sz(x) (int)x.size()
-#define left(x) (2*x)
-#define right(x) (2*x + 1)
+int max_even_numbers(int N, const vector<int>& sequence) {
+    // Create a 2D vector to store the optimal solution for each subsequence
+    vector<vector<int>> dp(N + 1, vector<int>(N + 1, 0));
 
-const int MAXN = 1e3+5;
-const int IFN = 1e9;
+    // Fill the dp table
+    for (int i = N - 1; i >= 0; i--) {
+        for (int j = i + 1; j <= N; j++) {
+            // Calculate the maximum even numbers if the first player chooses from the left end
+            int pick_left = sequence[i] + min(dp[i + 2][j], dp[i + 1][j - 1]);
 
-int value[MAXN];
-int memo[MAXN][MAXN];
-int resp;
-int N;
+            // Calculate the maximum even numbers if the first player chooses from the right end
+            int pick_right = sequence[j - 1] + min(dp[i + 1][j - 1], dp[i][j - 2]);
 
-int solve(int i, int j, bool isFirst){
-    if(i > N) return 0;
-    int k = i+j;
-    int &ans = memo[i][k];
-    if(ans != IFN) return ans;
-    ans = 0;
-    if(!isFirst)
-        ans = min(solve(i+1, j, !isFirst), solve(i, j-1, !isFirst));
-    else
-        ans = max(value[i]%2 == 0 + solve(i+1, j, !isFirst), value[j]%2 == 0 + solve(i, j-1, !isFirst));
-    return ans;
+            // Store the maximum of the two choices in the dp table
+            dp[i][j] = max(pick_left, pick_right);
+        }
+    }
+
+    // The result will be the maximum number of even numbers the first player can get
+    return dp[0][N];
 }
 
+int main() {
+    while (true) {
+        int N;
+        cin >> N;
+        if (N == 0) {
+            break;
+        }
 
-int main(){
-    fast
-    int n;
-    while(cin >> n && n){
-        int qtd = 0;
-        for(int i=1; i<=2*n; ++i){
-            cin >> value[i];
-            qtd += value[i]%2 == 0;
+        vector<int> sequence(2 * N);
+        for (int i = 0; i < 2 * N; i++) {
+            cin >> sequence[i];
         }
-        N = 2*n;
-        for(int i=1; i<=2*n; i++){
-            for(int j=i; j<=2*n; j++)
-                memo[i][j] = memo[j][i] = IFN;
-        }
-        cout << solve(1, 1, 1) << '\n';
+
+        int result = max_even_numbers(N, sequence);
+        cout << result << endl;
     }
+
     return 0;
 }
