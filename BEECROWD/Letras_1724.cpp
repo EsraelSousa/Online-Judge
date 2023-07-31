@@ -84,8 +84,8 @@ int bfs(int x, int y){
 void task(){
     cin >> n;
 	for(int i=1; i<=n; i++)
-		cin >> (mat[i]+1);
-
+		cin >> mat[i]+1;
+		
     cout << bfs(1, 1) << '\n';
 }
 
