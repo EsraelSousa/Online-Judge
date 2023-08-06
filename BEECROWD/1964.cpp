@@ -1,28 +1,53 @@
-// incompleto
 #include <bits/stdc++.h>
-
 using namespace std;
 
+#define fast ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
 typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef pair<int, int> ii;
+typedef vector<vi> vvi;
+#define ff first
+#define ss second
+#define all(x) x.begin(), x.end()
+#define sz(x) (int)x.size()
+#define left(x) (2*x)
+#define right(x) (2*x + 1)
 
 int main(){
-    ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-    ll C, Va, Vb, T, I, Ana = 0, Bia = 0;
-    cin >> C >> Va >> Vb >> T >> I;
-    C *= 100;
-    I *= 100;
-    T *= 60;
-    Ana = (I + ((T*Va)))%C; // posição de Ana no tempo T-1
-    Bia = (I + ((T*Vb)))%C; // posição de BIa no tempo T-1
-    //cout << Ana << ' ' << Bia << '\n';
-    //cout << fixed << setprecision(12) << 1.0 * (C-Ana) / Va << ' ' << 1.0 * (C-Bia) / Vb << ' ' << (1.0 * (C-Ana) / Va) - (1.0 * (C-Bia) / Vb) <<'\n';
-    if(Ana == 0 && Bia == 0) cout << ((Va >= Vb)? "Ana\n" : "Bia\n");
-    //else if(Ana == 0) cout << "Ana\n";
-    //else if(Bia == 0 ) cout << "Bia\n";
-    else cout << ((1.0 * (C-Ana) / Va <= 1.0 * (C-Bia) / Vb)? "Ana\n" : "Bia\n");
+    fast
+    int C, Va, Vb, T, I;
+    while(cin >> C >> Va >> Vb >> T >> I){
+        C *= 100;
+        I *= 100;
+        T *= 60;
+        double Ana = 1, Bia = 1;
+        int sum = 0;
+        for(int i=0; i<T; i++){
+            sum += Va;
+            sum %= C;
+        }
+        sum = (sum + I) % C;
+        if(sum == 0) sum = C;
+        Ana = C - sum;
+        //cout << C - sum << ' ';
+        sum = 0;        for(int i=0; i<T; i++){
+            sum += Vb;
+            sum %= C;
+        }
+        sum = (sum + I) % C;
+        if(sum == 0) sum = C;
+        Bia = C - sum;
+        //cout << C - sum << '\n';
+        //cout << fixed << setprecision(15) << Ana / Va << ' ' << Bia / Vb << '\n';
+        if(fabs(Ana / Va - Bia / Vb) < 1e-9)
+            cout << ((Va >= Vb)? "Ana\n" : "Bia\n");
+        else
+            cout << ((Ana / Va < Bia / Vb)? "Ana\n" : "Bia\n");
+    }
     return 0;
 }
 
 /*
-500 100 200 20 300
+a / b > b/c
 */
