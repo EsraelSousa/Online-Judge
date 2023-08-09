@@ -29,25 +29,26 @@ int main(){
         }
         sum = (sum + I) % C;
         if(sum == 0) sum = C;
-        Ana = C - sum;
+        Ana = (1.0 * C - sum) / Vb;
         //cout << C - sum << ' ';
-        sum = 0;        for(int i=0; i<T; i++){
+        sum = I;
+        for(int i=0; i<T; i++){
             sum += Vb;
             sum %= C;
         }
-        sum = (sum + I) % C;
+    
         if(sum == 0) sum = C;
-        Bia = C - sum;
+        Bia = (1.0 * C - sum) / Va;
         //cout << C - sum << '\n';
         //cout << fixed << setprecision(15) << Ana / Va << ' ' << Bia / Vb << '\n';
-        if(fabs(Ana / Va - Bia / Vb) < 1e-9)
+        if(fabs(Ana - Bia) < 1e-9)
             cout << ((Va >= Vb)? "Ana\n" : "Bia\n");
-        else
-            cout << ((Ana / Va < Bia / Vb)? "Ana\n" : "Bia\n");
+        else // Ana / Va <= Bia / Vb
+            cout << ((Ana < Bia)? "Ana\n" : "Bia\n");
     }
     return 0;
 }
 
 /*
-a / b > b/c
+6/8 <= 5/8 
 */

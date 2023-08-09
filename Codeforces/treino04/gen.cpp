@@ -14,9 +14,10 @@ int main(int argc, char* argv[]) {
     }
     rnd = mt19937(atoi(argv[1]));
     int n = atoi(argv[2]); int q = atoi(argv[3]); int m = atoi(argv[4]);
-    cout << n << '\n';
+    m = 10;//gen(2, 10);
+    cout << m << ' ' << n << '\n';
     while(n--){
-        cout << gen(1, 16) << ' ';
+        cout << gen(0, m-1) << ' ';
     }
     cout << '\n';
 }
