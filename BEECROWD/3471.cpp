@@ -1,7 +1,3 @@
-/*
-temos como fazer recursivo com O(F^N), ou faz formando os conjuntos com O(2^F)
-*/
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -18,11 +14,10 @@ typedef vector<vi> vvi;
 #define left(x) (2*x)
 #define right(x) (2*x + 1)
 
-int S, N, F;
-int isSum, Total;
-
 int main(){
     fast
-    cin >> S >> N >> F;
+    int n, m;
+    cin >> n >> m;
+    // precisa analisar como faz 
     return 0;
 }

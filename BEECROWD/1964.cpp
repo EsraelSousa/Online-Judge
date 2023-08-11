@@ -16,39 +16,28 @@ typedef vector<vi> vvi;
 
 int main(){
     fast
-    int C, Va, Vb, T, I;
+    ll C, Va, Vb, T, I;
     while(cin >> C >> Va >> Vb >> T >> I){
         C *= 100;
         I *= 100;
         T *= 60;
-        double Ana = 1, Bia = 1;
-        int sum = 0;
-        for(int i=0; i<T; i++){
-            sum += Va;
-            sum %= C;
-        }
-        sum = (sum + I) % C;
-        if(sum == 0) sum = C;
-        Ana = (1.0 * C - sum) / Vb;
-        //cout << C - sum << ' ';
-        sum = I;
-        for(int i=0; i<T; i++){
-            sum += Vb;
-            sum %= C;
-        }
-    
-        if(sum == 0) sum = C;
-        Bia = (1.0 * C - sum) / Va;
-        //cout << C - sum << '\n';
+        ll posicao = (T * Va + (C - I)) % C;
+        ll Ana = C - posicao;
+        posicao = (T * Vb + (C - I)) % C;
+        ll Bia = C - posicao;
+        //cout << Ana << ' ' << Bia << '\n';
+        //cout <<(long double)(C - sum)<< '\n';
         //cout << fixed << setprecision(15) << Ana / Va << ' ' << Bia / Vb << '\n';
-        if(fabs(Ana - Bia) < 1e-9)
+        if(Ana == Bia)
             cout << ((Va >= Vb)? "Ana\n" : "Bia\n");
+        else if(Bia == C && Va - Vb == 1)
+            cout << "Ana\n";
+        else if(Ana != 0 && Bia == C)
+            cout << "Bia\n";
+        else if(Bia != C && Ana == 0)
+            cout << "Ana\n";
         else // Ana / Va <= Bia / Vb
-            cout << ((Ana < Bia)? "Ana\n" : "Bia\n");
+            cout << (((ull)(1'000'000'000'000 * ((1.0 * Ana ) / Va)) <= (ull)(1'000'000'000'000 * ((1.0 * Bia ) / Vb)))? "Ana\n" : "Bia\n");
     }
     return 0;
 }
-
-/*
-6/8 <= 5/8 
-*/
