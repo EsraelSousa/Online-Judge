@@ -20,32 +20,48 @@ const int MAXN = 1e5+5;
 
 vi adj[MAXN];
 int pai[MAXN], morreu[MAXN];
-
-void dfs(int v, int filho, bool &achei, int &rei){
-    if(v == filho || achei) return;
-    if(!morreu[v]){
-        achei = true;
-        rei = v;
-        return;
-    }
-
-    
-        
-}
+vi reis;
 
 int main(){
     fast
     int Q, rei = 1, idPessoa = 2;
     cin >> Q;
     pai[1] = 1;
+    reis.push_back(1);
     while(Q--){
         int op, id;
         cin >> op >> id;
         if(op == 2){
-            
-            cout << rei << '\n';
+            if(id == reis[ sz(reis)-1 ]){
+                morreu[id] = 1;
+                bool flag = 0;
+                // get child
+                for(auto &x: adj[id]){
+                    if(!morreu[x]){
+                        reis.push_back(x);
+                        flag = 1;
+                        break;
+                    }
+                }
+                // get brother
+                if(!flag){
+                    id = pai[id];
+                    for(auto &x: adj[id]){
+                        if(!morreu[x]){
+                            reis.push_back(x);
+                            flag = 1;
+                            break;
+                        }
+                    }
+                }
+            }
+            else{
+                morreu[id] = 1;
+            }
+            cout << reis[ sz(reis)-1 ] << '\n';
         }
         else{
+            pai[idPessoa] = id; 
             adj[id].push_back(idPessoa++);
         }
     }
