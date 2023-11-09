@@ -1,12 +1,12 @@
-for ((I=1; I <= 43; I++)); do
-  ./a.out < "Testes/G_${I}.in" > m.out
-  if diff -u --suppress-common-lines m.out "Testes/G_${I}.sol"; then
+for ((I=1; I <= 24; I++)); do
+  ./a.out < "Testes/dinner_${I}.in" > m.out
+  if diff -u --suppress-common-lines m.out "Testes/dinner_${I}.ans"; then
     :
   else
     echo "--> entrada:"
-    cat "Testes/G_${I}.in"
+    cat "Testes/dinner${I}.in"
     echo "--> saída esperada:"
-    cat "Testes/G_${I}.sol"
+    cat "Testes/dinner_${I}.ans"
     echo "--> saída obtida:"
     cat m.out
     break
