@@ -1,62 +1,80 @@
-/*
-A solução é uma aplicação do floyd-warshall, ideia de corretude:
-esse algoritmo calcula a distancia minima de u para v para todos os pares u, v do grafo,
-então se queremos encontrar um circuito (loop) entre dois vertices, basta pegar a distancia 
-de u para v + a distancia de v para u. Temos só um problema em relação ao problema, temos
-que considerar a distancia dos vertices, mas também o tempo de visitar cada vertice, podemos
-apenas fazer uma modificação no peso das arestas para simplificar esse tempo.
-Se de u para v temos p e o tempo de visita de v é t, então podemos dizer que de u para v é p+t.
-Cuidado para considerar u e v diferentes.
-*/
+#include <iostream>
+#include <algorithm>
 
-#include <bits/stdc++.h>
 using namespace std;
 
-#define fast ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-typedef long long ll;
-typedef unsigned long long ull;
-typedef vector<int> vi;
-typedef pair<int, int> ii;
-typedef vector<vi> vvi;
-#define ff first
-#define ss second
-#define all(x) x.begin(), x.end()
-#define sz(x) (int)x.size()
-#define left(x) (2*x)
-#define right(x) (2*x + 1)
+struct t_aresta{
+    double dis;
+    int x, y;
+};
 
-const int MAXN = 1e3+5;
-const int INF = 1e9;
+bool comp(t_aresta a, t_aresta b){ return a.dis < b.dis; }
 
-int tempo[MAXN];
-int distancia[MAXN][MAXN];
+//--------------------
+#define MAXN 50500
+#define MAXM 2000
+
+int n, m; // número de vértices e arestas
+t_aresta aresta[MAXM];
+
+// para o union find
+int pai[MAXN];
+int peso[MAXN];
+
+// a árvore
+t_aresta mst[MAXM];
+//--------------------
+
+// funções do union find
+int find(int x){
+    if(pai[x] == x) return x;
+    return pai[x] = find(pai[x]);
+}
+
+void join(int a, int b){
+    
+    a = find(a);
+    b = find(b);
+    
+    if(peso[a] > peso[b]) pai[a] = b;
+    else if(peso[b] < peso[a]) pai[b] = a;
+    else{
+        pai[a] = b;
+        peso[b]++;
+    }
+    
+}
+
 
 int main(){
-    fast
-    int n, m, u, v, p;
-    int ans = INF;
+    
+    // ler a entrada
     cin >> n >> m;
-    for(register int i=1; i<=n; ++i){
-        cin >> tempo[i];
-        // vamos aproveitar para setar a matriz aqui nesse for
-        for(register int j=i; j<=n; ++j)
-            distancia[i][j] = distancia[j][i] = INF;
+    cout << n << ' ' << m << '\n';
+    for(int i = 1;i <= m;i++){
+        cin >> aresta[i].x >> aresta[i].y >> aresta[i].dis;
+		cout << aresta[i].x << " " << aresta[i].y << " " << aresta[i].dis << "\n";
+	}
+    
+    // inicializar os pais para o union-find
+    for(int i = 1;i <= n;i++) pai[i] = i;
+    
+    // ordenar as arestas
+    sort(aresta+1, aresta+m+1, comp);
+    
+    int size = 0;
+    for(int i = 1;i <= m;i++){
+        cout << aresta[i].x << " " << aresta[i].y << " " << aresta[i].dis << "\n";
+        if( find(aresta[i].x) != find(aresta[i].y) ){ // se estiverem em componentes distintas
+            join(aresta[i].x, aresta[i].y);
+            cout << aresta[i].x << " " << aresta[i].y << " " << aresta[i].dis << "\n";
+            mst[++size] = aresta[i];
+        }
+        
     }
-
-    for(register int i=0; i<m; ++i){
-        cin >> u >> v >> p;
-        distancia[u][v] = p + tempo[v];
-    }
-
-    for(register int k=1; k<=n; k++)
-        for(register int i=1; i<=n; i++)
-            for(register int j=1; j<=n; j++)
-                distancia[i][j] = min(distancia[i][j],
-                                      distancia[i][k] + distancia[k][j]);
-
-    for(register int i=1; i<=n; i++)
-        for(register int j=1; j<=n; j++)
-            ans = min(ans, distancia[i][j] + distancia[j][i]);
-    cout << ans << '\n';
+    
+    // imprimir a MST
+    //for(int i = 1;i < n;i++) cout << mst[i].x << " " << mst[i].y << " " << mst[i].dis << "\n";
+    
     return 0;
 }
