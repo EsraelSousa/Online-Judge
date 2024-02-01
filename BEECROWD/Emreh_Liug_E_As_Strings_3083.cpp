@@ -1,114 +1,59 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef long long ll;
-typedef vector<ll> vi;
-const ll p = 131; // p and M are
-const ll M = 1e9+7; // relatively prime
-const int MAXN = 1e5+5;
+typedef unsigned long long ull;
 
-ll mod(ll a, ll m) { // returns a (mod m)
-    return ((a%m) + m) % m; // ensure positive answer
+const int N = 1e5 + 5;
+const ull B = 313;
+
+char s[N], p[N], c;
+int b[N], n, m, q, l, ans[30][N]; // n = strlen(s), m = strlen(p);
+ull rk[2][N], elB[N];
+
+bool ig(int inip, int inis, int tam){
+    return rk[1][inip + tam - 1] - rk[1][inip - 1] * elB[tam]
+    == rk[0][inis + tam - 1] - rk[0][inis - 1] * elB[tam];
 }
 
-ll extEuclid(ll a, ll b, ll &x, ll &y) { // pass x and y by ref
-    ll xx = y = 0;
-    ll yy = x = 1;
-    while (b) { // repeats until b == 0
-        ll q = a/b;
-        ll t = b; b = a%b; a = t;
-        t = xx; xx = x-q*xx; x = t;
-        t = yy; yy = y-q*yy; y = t;
+int bs(int i){
+    int lo = 0, hi = m;
+    while(lo < hi){
+        int mid = (lo + hi + 1) / 2;
+        if(ig(1, i, mid))
+            lo = mid;
+        else
+            hi = mid - 1;
     }
-    return a; // returns gcd(a, b)
-}
-
-ll powMod(ll a, ll b){
-    ll ans = 1LL;
-    while(b){
-        if(b & 1) ans = (ans * a) % M;
-        a = (a*a) % M;
-        b >>=1;
-    }
-    return ans;
-}
-
-ll modInverse(ll b, ll m) { // returns b^(-1) (mod m)
-    ll x, y;
-    ll d = extEuclid(b, m, x, y); // to get b*x + m*y == d
-    if (d != 1) return -1; // to indicate failure
-                            // b*x + m*y == 1, now apply (mod m) to get b*x == 1 (mod m)
-    return mod(x, m);
-}
-
-vi prefixSum;
-vi P; // to store p^i % M
-vi h;
-
-vi prepareP(int n) { // compute p^i % M
-    P.assign(n, 0);
-    P[0] = 1;
-    for (int i = 1; i < n; ++i) // O(n)
-        P[i] = ((ll)P[i-1]*p) % M;
-    return P;
-}
-
-void computeRollingHash(string& T) { // Overall: O(n)
-    vi P = prepareP((int)T.length()); // O(n)
-    h.assign(T.size(), 0);
-    for (int i = 0; i < (int)T.length(); ++i) { // O(n)
-        if (i != 0) h[i] = h[i-1]; // rolling hash
-        h[i] = (h[i] + ((ll)T[i]*P[i]) % M) % M;
-    }
-}
-
-ll hash_fast(int L, int R) { // O(1) hash of any substr
-    if (L == 0) return h[R]; // h is the prefix hashes
-    ll ans = 0;
-    ans = ((h[R] - h[L-1]) % M + M) % M; // compute differences
-    ans = ((ll)ans * modInverse(P[L], M)) % M; // remove P[L]^-1 (mod M)
-    return ans;
-}
-
-ll solve(int idx, char c, int n, int T, ll hashComp, string& s){
-    ll ans = 0;
-    ll hashAtual = 0;
-    int i, j, limit;
-    char aux = s[idx];
-    vi hash;
-    s[idx] = c;
-    computeRollingHash(s);
-    for(int i=0; i <= T-n; i++)
-        ans += (hashComp == hash_fast(i, i+n-1));
-    s[idx] = aux;
-    return ans;
+    return lo;
 }
 
 int main(){
-    ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-    string s1, s2;
-    int query, idx;
-    char letra;
-    cin >> s1 >> s2;
-    computeRollingHash(s2);
-    ll hashS2 = hash_fast(0, s2.size()-1);
-    computeRollingHash(s1);
-    ll ans = 0;
-    for(int i=0; i<(int)(s1.size()); i++){
-        //cout << i << ' ' << hash_fast(i, i+s2.size()-1) << ' ' << i + s2.size() << '\n';
-        ans += (hashS2 == hash_fast(i, min(i+s2.size()-1, s1.size()-1)));
-        prefixSum.push_back(ans);
+    scanf(" %s", s);
+    scanf(" %s", p);
+    n = strlen(s);
+    elB[0] = 1;
+    for(int i = 1; i <= n; i++)
+        rk[0][i] = rk[0][i - 1] * B + s[i - 1], elB[i] = elB[i - 1] * B;
+    m = strlen(p);
+    for(int i = 1; i <= m; i++)
+        rk[1][i] = rk[1][i - 1] * B + p[i - 1];
+    for(int i = 1; i + m - 1 <= n; i++){
+        int bb = bs(i);
+        ans[0][i] = ans[0][i - 1];
+        if(bb == m)
+            ans[0][i]++;
+        else if(bb + 2 > m || ig(bb + 2, i + bb + 1, m - bb - 1))
+            ans[p[bb] - 'a' + 1][i + bb]++;
     }
-    //cout << ans << ' ' << hashS2 << " init\n";
-    cin >> query;
-    while(query--){
-        cin >> idx >> letra;
-        idx--;
-        if(s1[idx] == letra){
-            cout << ans << '\n';
-            continue;
-        }
-        cout << solve(idx, letra, s2.size(), s1.size()-1, hashS2, s1) << '\n';
+    scanf("%d", &q);
+    while (q--){
+        scanf("%d %c", &l, &c);
+        if(n < m)
+            printf("0\n");
+        else if(s[l - 1] == c)
+            printf("%d\n", ans[0][n - m + 1]);
+        else
+            printf("%d\n", ans[0][n - m + 1] - ans[0][min(n - m + 1, l)] + ans[0][max(0, l - m)] + ans[c - 'a' + 1][l]);
     }
     return 0;
 }
