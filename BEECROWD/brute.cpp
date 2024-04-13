@@ -1,18 +1,14 @@
-#include <bits/stdc++.h>
+#include <iostream>
 
 using namespace std;
 
 int main(){
-  ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-  string s;
-  cin >> s;
-  bool flag = true;
-  cout << s << '\n';
-  for(int i=1; i<(int)s.size() and flag; i++){
-    cout << i << '\n';
-    flag &= islower(s[i]) != 0;
-  }
-    cout << flag << '\n';
-  cout << ((isupper(s[0]) and flag)? "Yes\n" : "No\n");
-  return 0;
+    // Seu código vai aqui
+	int a, b, c, d;
+	cin >> a >> b >> c >> d;
+	int s1 = (a+b)-(c+d);
+	int s2 = (a+c)-(b+d);
+	int s3 = (a+d)-(b+c);
+	cout << min(abs(s1), min(abs(s2), abs(s3))) << '\n';
+    return 0;
 }
