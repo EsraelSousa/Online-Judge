@@ -7,8 +7,12 @@
         "list": "cpp",
         "string": "cpp",
         "vector": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "ostream": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
-    "editor.formatOnSave": false
+    "editor.formatOnSave": false,
+    "cSpell.words": [
+        
+    ]
 }
