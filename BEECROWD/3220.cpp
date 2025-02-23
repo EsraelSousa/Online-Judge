@@ -1,3 +1,5 @@
+#pragma GCC optimize("unroll-loops")
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -14,72 +16,54 @@ typedef vector<vi> vvi;
 #define left(x) (2*x)
 #define right(x) (2*x + 1)
 
-struct DSU {
-    vector<int> parent, rank;
+vi wxor(vi &s) {
+    int n = sz(s);
+    vi ans = s;
+    int allXor = 0;
 
-    DSU(int n) {
-        parent.resize(n + 1);
-        rank.resize(n + 1, 0);
-        for (int i = 0; i <= n; i++) {
-            parent[i] = i;
-        }
+    // Calcula o XOR de todos os elementos de s
+    for (int v : s)
+        allXor ^= v;
+
+    // Modifica s[i] e calcula os novos valores para ans
+    for (int i = 0; i < n; i++) {
+        int aux = s[i];          // Guarda o valor original de s[i]
+        s[i] = allXor;           // Modifica s[i]
+        ans[i] = allXor ^ aux;   // Calcula o novo valor de ans[i] (XOR de todos, exceto s[i])
+        allXor ^= aux;           // Atualiza o XOR removendo o valor anterior de s[i]
     }
+    allXor = 0;
 
-    int find(int u) {
-        if (u == parent[u]) return u;
-        return parent[u] = find(parent[u]); // Path compression
-    }
-
-    bool unite(int u, int v) {
-        u = find(u);
-        v = find(v);
-        if (u == v) return false; // Já estão no mesmo componente
-        if (rank[u] < rank[v]) swap(u, v);
-        parent[v] = u;
-        if (rank[u] == rank[v]) rank[u]++;
-        return true; // Conseguiu unir
-    }
-};
-
-void task(){
-    int n, m1, m2;
-    cin >> n >> m1 >> m2;
-    DSU F(n), G(n);
-    vector<ii> edgesF(m1), edgesG(m2);
-    for(auto &edge: edgesF){
-        cin >> edge.ff >> edge.ss;
-    }
-
-    for(auto &edge: edgesG){
-        cin >> edge.ff >> edge.ss;
-        G.unite(edge.ff, edge.ss);
-    }
-
-    int ans = 0;
-    for(auto &edge: edgesF){
-        if(G.find(edge.ff) != G.find(edge.ss)){
-            ans++;
-            //cout << edge.ff << ' ' << edge.ss << " rem\n";
-            continue;
-        }
-        F.unite(edge.ff, edge.ss);
-    }
-
-    for(auto &edge: edgesG){
-        if(F.find(edge.ff) != F.find(edge.ss)){
-            ans++;
-            F.unite(edge.ff, edge.ss);
-        }
-    }
-
-    cout << ans << '\n';
+    // Calcula o XOR de todos os elementos de s
+    for (int v : s)
+        allXor ^= v;
+    ans[0] = allXor;
+    return ans;
 }
+
 
 int main(){
     fast
-    int tes = 1;
-    cin >> tes;
-    while(tes--)
-        task();
+    int n, m , k;
+    while(cin >> n >> m >> k && (n+m+k)){
+        vi s(n);
+        int X = 0;
+        for(int &x: s){
+            cin >> x;
+            X ^= x;
+        }
+        //cout << X << " xor all\n";
+        m %= n;
+        while(m--){
+            /*for(auto v: s)
+                cout << v << ' ';
+            cout << '\n';*/
+            s = wxor(s);
+        }
+        /*for(auto v: s)
+                cout << v << ' ';
+            cout << '\n';*/
+        cout << s[k-1] << '\n';
+    }
     return 0;
 }
