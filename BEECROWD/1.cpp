@@ -1,23 +1,21 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+
 using namespace std;
 
-#define fast ios::sync_with_stdio(0); cin.tie(nullptr); cout.tie(nullptr);
-typedef long long ll;
-typedef unsigned long long ull;
-typedef vector<int> vi;
-typedef pair<int, int> ii;
-typedef vector<vi> vvi;
-#define ff first
-#define ss second
-#define all(x) x.begin(), x.end()
-#define sz(x) (int)x.size()
-#define left(x) (2*x)
-#define right(x) (2*x + 1)
-
-int main(){
-    fast
-    for(int i=0; i<=32; i++){
-        cout << bitset<7>(i).to_string() << '\n';
-    }   
+int main() {
+    int N;
+    while (cin >> N && N != 0) {
+        while (N--) {
+            string line;
+            cin >> line;
+            int countOnes = 0;
+            for (char digit : line) {
+                int num = digit - '0';
+                countOnes += num;
+            }
+            cout << (countOnes % 10) << endl;
+        }
+    }
     return 0;
 }

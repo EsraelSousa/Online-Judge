@@ -12,6 +12,7 @@ int main(){
     while(cin >> n >> valor){
     	for(int i=1; i<=n; i++) cin >> vet[i];
     	sort(vet+1, vet+n+1);
+		
     	for(int i=1; i<=3; i++)
     		K[i] = i*(n+1)/4;
     	for(int i=1; i<=3; i++)
@@ -19,6 +20,11 @@ int main(){
     
     	infer = Q[1] - 0.5*(Q[3] - Q[1]);
     	super = Q[3] + 0.5*(Q[3] - Q[1]);
+		
+		cout << K[1] << ' ' << vet[K[1]] << ' ' << K[3] << ' ' << vet[K[3]] << '\n';
+		cout << Q[1] << ' ' << Q[3] << '\n';
+		cout << infer << ' ' << super << '\n';
+
     	int cont = 0;
     	//for(int i=1; vet[i] < infer; i++) cont++;
 		cont += (int)(lower_bound(vet+1, vet+n, infer) - vet);
