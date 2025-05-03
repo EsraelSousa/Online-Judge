@@ -1,5 +1,3 @@
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -16,54 +14,25 @@ typedef vector<vi> vvi;
 #define left(x) (2*x)
 #define right(x) (2*x + 1)
 
-vi wxor(vi &s) {
-    int n = sz(s);
-    vi ans = s;
-    int allXor = 0;
 
-    // Calcula o XOR de todos os elementos de s
-    for (int v : s)
-        allXor ^= v;
+random_device rd; // fonte de entropia
+mt19937 gen(rd()); // gerador Mersenne Twister
+uniform_int_distribution<> dist(1, 100); // de 1 a 100
 
-    // Modifica s[i] e calcula os novos valores para ans
-    for (int i = 0; i < n; i++) {
-        int aux = s[i];          // Guarda o valor original de s[i]
-        s[i] = allXor;           // Modifica s[i]
-        ans[i] = allXor ^ aux;   // Calcula o novo valor de ans[i] (XOR de todos, exceto s[i])
-        allXor ^= aux;           // Atualiza o XOR removendo o valor anterior de s[i]
-    }
-    allXor = 0;
-
-    // Calcula o XOR de todos os elementos de s
-    for (int v : s)
-        allXor ^= v;
-    ans[0] = allXor;
-    return ans;
+int gera(){
+    int sinal = dist(gen)>=50? 1 : -1;
+    return sinal * dist(gen);
 }
-
 
 int main(){
     fast
-    int n, m , k;
-    while(cin >> n >> m >> k && (n+m+k)){
-        vi s(n);
-        int X = 0;
-        for(int &x: s){
-            cin >> x;
-            X ^= x;
-        }
-        //cout << X << " xor all\n";
-        m %= n;
-        while(m--){
-            /*for(auto v: s)
-                cout << v << ' ';
-            cout << '\n';*/
-            s = wxor(s);
-        }
-        /*for(auto v: s)
-                cout << v << ' ';
-            cout << '\n';*/
-        cout << s[k-1] << '\n';
-    }
+    int n = 10, q = 10;
+    cout << INT_MAX << '\n';
+    cout << n << '\n';
+    for(int i=1; i<=n; i++)
+        cout << gera() << " \n"[i == n];
+    cout << q << '\n';
+    while(q--)
+        cout << gera() << '\n';
     return 0;
 }
